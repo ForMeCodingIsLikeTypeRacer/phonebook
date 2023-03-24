@@ -22,15 +22,16 @@ const App = () => {
   const addName = (event) => {
     event.preventDefault();
 
-    const personList = persons.map(person => person.name);
+    const personList = persons.map(person => person);
     var existingPersonId;
+    var existingPersonIndex;
     
     var alreadyExists = false;
     for(var i = 0; i < personList.length; i++) {
-      if(newName === personList[i]) {
+      if(newName === personList[i].name) {
         alreadyExists = true;
         existingPersonId = personList[i].id;
-        console.log(personList[i]);
+        existingPersonIndex = i;
       }
     }
     
@@ -44,10 +45,21 @@ const App = () => {
       postPerson.postPersonFunc(personObject)
       
     } else {
-      alert(`${newName} is already added to phonebook, replace the old number with a new one?`)
-        
+      if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`) === true) {
+        const personObject = {
+          name: newName,
+          number: newNumber,
+          id: existingPersonId
+        }
+        const updatedPersons = [
+          ...persons.slice(0, existingPersonIndex), // Copy the elements before the updated person
+          { ...persons[existingPersonIndex], number: newNumber }, // Create a new object with the updated number property
+          ...persons.slice(existingPersonIndex + 1) // Copy the elements after the updated person
+        ];
+        setPersons(updatedPersons);
+        postPerson.updatePersonFunc(existingPersonId,personObject);
+      }
     }
-
     setNewName('');
     setNewNumber('');
   }
