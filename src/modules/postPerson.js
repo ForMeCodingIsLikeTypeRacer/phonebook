@@ -12,12 +12,12 @@ import axios from 'axios'
             console.log(response)
     }
 
-    // const updatePersonFunc = async (id, newObject) => {
-    //     const response = await axios.put(`http://localhost:3001/persons/${id}`, newObject);
-    //     console.log(response);
-    //   };
+    const updatePersonFunc = async (id, newObject) => {
+        const response = await axios.put(`http://localhost:3001/persons/${id}`, newObject);
+        console.log(response);
+      };
     
 
-const postPersonModule = { postPersonFunc, deletePersonFunc, }
+const postPersonModule = { postPersonFunc, deletePersonFunc, updatePersonFunc}
 
 export default postPersonModule
