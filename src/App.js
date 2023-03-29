@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import postPerson from './modules/postPerson';
+import Notification from './components/Notification';
+import './index.css'
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [newFilter, setNewFilter] = useState('');
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     console.log('effect');
@@ -42,7 +46,14 @@ const App = () => {
         id: personList.length + 1
       }
       setPersons(persons.concat(personObject));
-      postPerson.postPersonFunc(personObject)
+      postPerson.postPersonFunc(personObject);
+
+      setSuccessMessage(
+        `Added ${newName}`
+      )
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
       
     } else {
       if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`) === true) {
@@ -58,6 +69,13 @@ const App = () => {
         ];
         setPersons(updatedPersons);
         postPerson.updatePersonFunc(existingPersonId,personObject);
+
+        setSuccessMessage(
+          `Changed ${newName}'s number`
+        )
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
       }
     }
     setNewName('');
@@ -81,6 +99,7 @@ const App = () => {
 
   const handleFilterchange = (event) => {
     setNewFilter(event.target.value);
+
   }
 
   const filteredPersons = persons.filter(person =>
@@ -90,6 +109,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMessage} />
       <div>
         filter shown with <input value={newFilter} onChange={handleFilterchange} />
       </div>
